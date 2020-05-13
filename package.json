@@ -1,0 +1,34 @@
+{
+  "name": "mandatory_2",
+  "version": "1.0.0",
+  "description": "This is my mandatory project for the Node.js elective",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env PORT=80 node index.js",
+    "start-prod": "sudo cross-env PORT=80 pm2 start index.js -f",
+    "start-dev": "cross-env PORT=3000 nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rasmus-Lykke/node-mandatory-2.git"
+  },
+  "keywords": [
+    "web",
+    "page"
+  ],
+  "author": "Rasmus Lykke Sørensen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Rasmus-Lykke/node-mandatory-2/issues"
+  },
+  "homepage": "https://github.com/Rasmus-Lykke/node-mandatory-2#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.3",
+    "uglify-js": "^3.9.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2"
+  }
+}
