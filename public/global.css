@@ -1,0 +1,24 @@
+#logo {
+  width: 10%;
+}
+
+#copyright {
+  font-size: 0.4em;
+}
+
+#main-content {
+  min-height: calc(100vh - 110px);
+}
+
+footer {
+  height: 10px;
+}
+
+#upload-link {
+  float: right;
+  padding-right: 20px;
+}
+
+body {
+  margin: 1%;
+}

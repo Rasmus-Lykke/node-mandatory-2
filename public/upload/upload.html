@@ -1,0 +1,70 @@
+<script src="./upload.js"></script>
+
+<div>
+    <h1 class="mb-5">
+        Upload page
+    </h1>
+
+    <div class="container float-left" style="width: 25%;">
+        <form action="/pictures" method="POST" name="pictureuploadform" enctype="multipart/form-data"
+            onsubmit="return validateForm()">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Upload</span>
+                </div>
+                <div class="custom-file">
+                    <input class="custom-file-input" id="inputGroupFile01" type="file" name="uploadedpicture"
+                        accept="image/*" onchange="handleFileUpload(this.files)" />
+                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                </div>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Title</span>
+                </div>
+                <input type="text" class="form-control" name="title" placeholder="picture title" aria-label="Username"
+                    aria-describedby="basic-addon1">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Description</span>
+                </div>
+                <textarea class="form-control" aria-label="With textarea" placeholder="Description" name="description"
+                    type="text"></textarea>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Tags</span>
+                </div>
+                <textarea class="form-control" aria-label="With textarea"
+                    placeholder="Tags, seperate with &quot;,&quot;" name="tags" type="text"></textarea>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Category</label>
+                </div>
+                <select name="category" class="custom-select" id="inputGroupSelect01">
+                    <option selected>Choose...</option>
+                    <option value="animals">Animals</option>
+                    <option value="food">Food</option>
+                    <option value="games">Games</option>
+                    <option value="nature">Nature</option>
+                    <option value="science">Science</option>
+                    <option value="scifi">Sci-fi</option>
+                    <option value="sports">Sports</option>
+                    <option value="vehicle">Vehicle</option>
+                </select>
+            </div>
+
+            <div>
+                <button class="btn btn-primary" type="submit"> Upload </button>
+            </div>
+
+        </form>
+    </div>
+</div>
