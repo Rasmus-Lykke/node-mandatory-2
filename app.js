@@ -1,19 +1,33 @@
 const express = require("express");
+const fs = require("fs");
+
 const app = express();
+
+// parse application/json
+app.use(express.json());
+
+/* Setup Knex with Objection */
+
+const { Model } = require('objection');
+const Knex = require('knex');
+const knexfile = require('./knexfile.js');
+
+const knex = Knex(knexfile.development);
+
+Model.knex(knex);
+
 
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }));
  
-// parse application/json
-app.use(express.json());
-
 app.use(express.static('public'));
 app.use(express.static('pictures'));
 
 // Import routes
+const authRoute = require('./routes/auth.js');
+const usersRoute = require('./routes/users.js');
 const videosRoute = require("./routes/pictures");
 
-const fs = require("fs");
 
 const navbarPage = fs.readFileSync("./public/navbar/navbar.html", "utf8");
 const footerPage = fs.readFileSync("./public/footer/footer.html", "utf8");
@@ -44,8 +58,11 @@ app.get("/signin", (req, res) => {
 app.get("/signup", (req, res) => {
     return res.send(navbarPage + signupPage + footerPage);
 });
+
 // Set up routes with our server
 app.use(videosRoute.router);
+app.use(authRoute);
+app.use(usersRoute);
 
 const port = process.env.PORT ? process.env.PORT : 3000;
 

@@ -2,12 +2,19 @@
   "name": "mandatory_2",
   "version": "1.0.0",
   "description": "This is my mandatory project for the Node.js elective",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env PORT=80 node index.js",
-    "start-prod": "cross-env PORT=80 pm2 start index.js -f",
-    "start-dev": "cross-env PORT=3000 nodemon index.js"
+    "start": "cross-env PORT=80 node app.js",
+    "start-prod": "cross-env PORT=80 pm2 start app.js -f",
+    "start-dev": "cross-env PORT=3000 nodemon app.js",
+
+    "migrate:latest": "knex migrate:latest",
+    "migrate:make": "knex migrate:make ",
+    "migrate:rollback": "knex migrate:rollback",
+
+    "seed:make": "knex seed:make",
+    "seed:run": "knex seed:run"
   },
   "repository": {
     "type": "git",
@@ -25,9 +32,11 @@
   "homepage": "https://github.com/Rasmus-Lykke/node-mandatory-2#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "knex": "^0.21.1",
     "multer": "^1.4.2",
+    "mysql": "^2.18.1",
     "nodemon": "^2.0.3",
-    "uglify-js": "^3.9.2"
+    "objection": "^2.1.3"
   },
   "devDependencies": {
     "cross-env": "^7.0.2"
