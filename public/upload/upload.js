@@ -1,7 +1,7 @@
 let fileValid = false;
 
-function validateForm(){
-    
+function validateForm() {
+
     const title = document.forms.pictureuploadform.title.value.trim();
     const description = document.forms.pictureuploadform.description.value;
     const tags = document.forms.pictureuploadform.tags;
@@ -29,7 +29,7 @@ function validateForm(){
     return fileValid;
 };
 
-function handleFileUpload(files){
+function handleFileUpload(files) {
     const file = files[0];
 
     const fileSize = file.size;
@@ -37,7 +37,6 @@ function handleFileUpload(files){
     const fileType = mimeArray[0];
 
 
-    
     if (fileType !== "image") {
         console.log("Error file type = " + fileType);
         fileValid = false;
@@ -51,8 +50,8 @@ function handleFileUpload(files){
         fileValid = false;
         return;
     };
-    
+
     fileValid = true;
-    
+
     return fileValid;
 };

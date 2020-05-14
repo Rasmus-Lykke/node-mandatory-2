@@ -1,12 +1,13 @@
 </div>
-    
+
 <footer>
-    <p style="font-size: 1rem;" id="copyright">Copyright (C)</p>
+    <p style="font-size: 1rem;" id="copyright">Copyright&copy </p>
 </footer>
 <script>
     const currentYear = new Date().getFullYear();
 
-    $("#copyright").text("Copyright (C) " + currentYear);
+    $("#copyright").append(currentYear);
 </script>
 </body>
+
 </html>

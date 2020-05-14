@@ -5,18 +5,15 @@ console.log(pictureId);
 
 $.get(`/pictures/${pictureId}`)
     .done((data) => {
-        console.log(data.response);
-
+        
         $("#title").text(data.response.title);
 
-        const player = `<picture style="width: 25%" id="player" controls>
-                    <source src="/${pictureId}" >
-                    Your browser does not support the picture tag.
-                </picture>`;
+        const player = `<img style="width: 25%" id="player" source src="/${pictureId}"></img>`;
 
         $("#player").append(player);
 
         $("#description").text(data.response.description);
+        
     })
     .catch((error) => {
         console.log(error);

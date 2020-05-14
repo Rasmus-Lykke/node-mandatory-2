@@ -21,6 +21,8 @@ const footerPage = fs.readFileSync("./public/footer/footer.html", "utf8");
 const frontpagePage = fs.readFileSync("./public/frontpage/frontpage.html", "utf8");
 const playerPage = fs.readFileSync("./public/player/player.html", "utf8");
 const uploadPage = fs.readFileSync("./public/upload/upload.html", "utf8");
+const signinPage = fs.readFileSync("./public/signin/signin.html", "utf8");
+const signupPage = fs.readFileSync("./public/signup/signup.html", "utf8");
 
 app.get("/", (req, res) => {
     videosRoute.readFromFile();
@@ -35,6 +37,13 @@ app.get("/upload", (req, res) => {
     return res.send(navbarPage + uploadPage + footerPage);
 });
 
+app.get("/signin", (req, res) => {
+    return res.send(navbarPage + signinPage + footerPage);
+});
+
+app.get("/signup", (req, res) => {
+    return res.send(navbarPage + signupPage + footerPage);
+});
 // Set up routes with our server
 app.use(videosRoute.router);
 
@@ -46,6 +55,6 @@ const server = app.listen(port, (error) => {
     }
     console.log("This server is running on port", server.address().port);
  
-    // videosRoute.readFromFile();
+    videosRoute.readFromFile();
 
 });
