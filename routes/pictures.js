@@ -1,8 +1,10 @@
 const router = require("express").Router();
 const crypto = require("crypto");
-const multer  = require('multer');
+const multer = require('multer');
 const fs = require("fs");
-var obj = { pictures: [] };
+var obj = {
+    pictures: []
+};
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -20,13 +22,16 @@ const storage = multer.diskStorage({
         };
     }
 });
-  
-const upload = multer({ storage: storage });
+
+const upload = multer({
+    storage: storage
+});
+
 
 function writeToFile() {
     var json = JSON.stringify(obj);
     fs.writeFile('myjsonfile.json', json, 'utf8', (err, data) => {
-        if (err){
+        if (err) {
             console.log(err);
         } else {
             console.log("Write successful!");
@@ -34,17 +39,22 @@ function writeToFile() {
     });
 };
 
+
 const picturesPerPage = 12;
 router.get("/pictures", (req, res) => {
     const page = Number(req.query.page) ? Number(req.query.page) : 1;
     const start = (page - 1) * picturesPerPage;
     const end = start + picturesPerPage;
 
-    return res.send({ response: obj.pictures.slice(start, end) });
+    return res.send({
+        response: obj.pictures.slice(start, end)
+    });
 });
 
 router.get("/pictures/:pictureId", (req, res) => {
-    return res.send({ response: obj.pictures.find(picture => picture.fileName === req.params.pictureId) });
+    return res.send({
+        response: obj.pictures.find(picture => picture.fileName === req.params.pictureId)
+    });
 });
 
 router.post("/pictures", upload.single('uploadedpicture'), (req, res) => {
@@ -62,38 +72,46 @@ router.post("/pictures", upload.single('uploadedpicture'), (req, res) => {
 
     const titleMaxLength = 128;
     if (picture.title.length === 0 || picture.title.length > titleMaxLength) {
-        return res.status(400).send({response: `Error: title length is ${picture.title.length} but must be more than 0 or less than ${titleMaxLength}`});
+        return res.status(400).send({
+            response: `Error: title length is ${picture.title.length} but must be more than 0 or less than ${titleMaxLength}`
+        });
     };
 
     const descriptionMaxLength = 2048;
     if (picture.description.length > descriptionMaxLength) {
-        return res.status(400).send({response: `Error: description length is ${picture.description.length} but must be less than ${descriptionMaxLength}`})
+        return res.status(400).send({
+            response: `Error: description length is ${picture.description.length} but must be less than ${descriptionMaxLength}`
+        })
     };
 
     // 250MB
     const fileSizeLimit = 262144000;
     if (req.file.size > fileSizeLimit) {
         fileValid = false
-        return res.status(400).send({response: `Error: pictures size is ${req.file.size} but must be less than ${fileSizeLimit}`})
+        return res.status(400).send({
+            response: `Error: pictures size is ${req.file.size} but must be less than ${fileSizeLimit}`
+        })
     };
 
     const tagsMaxLength = 8;
     if (picture.tags.length > tagsMaxLength) {
-        return res.status(400).send({response: `Error: Amount of tags is ${picture.tags.length} but must be less than ${tagsMaxLength}`})
+        return res.status(400).send({
+            response: `Error: Amount of tags is ${picture.tags.length} but must be less than ${tagsMaxLength}`
+        })
     };
 
     console.log(picture);
     obj.pictures.push(picture);
     writeToFile();
 
-    return res.redirect("/"); 
+    return res.redirect("/");
 });
 
 module.exports = {
-    router: router, 
-    readFromFile: function() {
+    router: router,
+    readFromFile: function () {
         fs.readFile('myjsonfile.json', 'utf8', (err, data) => {
-            if (err){
+            if (err) {
                 console.log(err);
             } else {
                 console.log("Read successful!")
@@ -103,4 +121,3 @@ module.exports = {
     }
 
 };
-

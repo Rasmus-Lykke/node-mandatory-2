@@ -1,24 +1,24 @@
 #logo {
-  width: 10%;
+    width: 10%;
 }
 
 #copyright {
-  font-size: 0.4em;
+    font-size: 0.4em;
 }
 
 #main-content {
-  min-height: calc(100vh - 110px);
+    min-height: calc(100vh - 110px);
 }
 
 footer {
-  height: 10px;
+    height: 10px;
 }
 
 #upload-link {
-  float: right;
-  padding-right: 20px;
+    float: right;
+    padding-right: 20px;
 }
 
 body {
-  margin: 1%;
+    margin: 1%;
 }

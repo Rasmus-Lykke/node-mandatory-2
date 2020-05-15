@@ -4,9 +4,49 @@ const User = require("../models/User.js");
 
 
 router.post('/login', (req, res) => {
-    return res.status(501).send({
-        response: "Not implemented yet"
-    });
+
+    const {
+        username,
+        password
+    } = req.body;
+
+    if (username.length > 0 && password.length > 0) {
+
+        try {
+
+            User.query().select('username', "password").where('username', username).then(foundUser => {
+
+                if (foundUser.length < 1) {
+                    return res.status(500).send({
+                        response: "User does not exists"
+                    });
+                } else {
+                    bcrypt.compare(password, foundUser[0].password).then(result => {
+                        if (result == true) {
+                            return res.send({
+                                response: "Login successful"
+                            });
+                        } else {
+                            return res.send({
+                                response: "The password did not match"
+                            });
+                        }
+                    });
+                }
+
+            });
+        } catch (error) {
+            return res.send({
+                response: "Something went wrong with the DB"
+            });
+        }
+
+    } else {
+
+        return res.send({
+            response: "You did not fulfill the requirements"
+        });
+    }
 });
 
 
@@ -40,13 +80,16 @@ router.post('/signup', (req, res) => {
                                         response: "Email already exists"
                                     });
                                 } else {
-                                    User.query().insert({
-                                        username,
-                                        password,
-                                        email
-                                    }).then(createdUser => {
-                                        return res.send({
-                                            response: `The user ${createdUser.username} was created`
+                                    // Password encryption
+                                    bcrypt.hash(password, saltRounds).then(hashedPassword => {
+                                        User.query().insert({
+                                            username,
+                                            password,
+                                            email
+                                        }).then(createdUser => {
+                                            return res.send({
+                                                response: `The user ${createdUser.username} was created`
+                                            });
                                         });
                                     });
                                 }
