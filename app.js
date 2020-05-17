@@ -3,6 +3,8 @@ const fs = require("fs");
 
 const app = express();
 
+const session = require('express-session');
+
 // parse application/json
 app.use(express.json());
 
@@ -32,7 +34,7 @@ const authLimiter = rateLimit({
 });
 
 app.use('/signup', authLimiter);
-app.use('/login', authLimiter);
+app.use('/signin', authLimiter);
 
 /* Setup Knex with Objection */
 const { Model } = require('objection');

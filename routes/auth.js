@@ -2,19 +2,25 @@ const router = require('express').Router();
 
 const User = require("../models/User.js");
 
+const bcrypt = require('bcrypt');
+const saltRounds = 12;
 
-router.post('/login', (req, res) => {
+
+router.post('/signin', (req, res) => {
+
+    console.log("Login started");
+    console.log(req.body.email);
 
     const {
-        username,
+        email,
         password
     } = req.body;
 
-    if (username.length > 0 && password.length > 0) {
+    if (email.length > 0 && password.length > 0) {
 
         try {
 
-            User.query().select('username', "password").where('username', username).then(foundUser => {
+            User.query().select('email', "password").where('email', email).then(foundUser => {
 
                 if (foundUser.length < 1) {
                     return res.status(500).send({
@@ -84,8 +90,9 @@ router.post('/signup', (req, res) => {
                                     bcrypt.hash(password, saltRounds).then(hashedPassword => {
                                         User.query().insert({
                                             username,
-                                            password,
-                                            email
+                                            email,
+                                            password: hashedPassword
+                                            
                                         }).then(createdUser => {
                                             return res.send({
                                                 response: `The user ${createdUser.username} was created`
