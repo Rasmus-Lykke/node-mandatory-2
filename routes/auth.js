@@ -92,7 +92,7 @@ router.post('/signup', (req, res) => {
                                             username,
                                             email,
                                             password: hashedPassword
-                                            
+
                                         }).then(createdUser => {
                                             return res.send({
                                                 response: `The user ${createdUser.username} was created`

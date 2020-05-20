@@ -11,6 +11,14 @@ app.use(express.json());
 // You need to copy the config.template.json file and fill out your own secret
 const config = require('./config/config.json');
 
+/*
+// Middleware, sits between the request and the response
+app.use((req, res, next) => {
+    console.log("Time of the request: ", new Date());
+    next();
+});
+*/
+
 app.use(session({
     secret: config.sessionSecret,
     resave: false,
@@ -26,18 +34,20 @@ const limiter = rateLimit({
     max: 100 // limit each IP to 100 requests per windowMs
 });
 
-app.use(limiter);
-
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 8 // limit each IP to 8 requests per windowMs
+    max: 15 // limit each IP to 15 requests per windowMs
 });
+
+app.use(limiter);
 
 app.use('/signup', authLimiter);
 app.use('/signin', authLimiter);
 
 /* Setup Knex with Objection */
-const { Model } = require('objection');
+const {
+    Model
+} = require('objection');
 const Knex = require('knex');
 const knexfile = require('./knexfile.js');
 
@@ -46,8 +56,10 @@ const knex = Knex(knexfile.development);
 Model.knex(knex);
 
 // parse application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: false }));
- 
+app.use(express.urlencoded({
+    extended: false
+}));
+
 app.use(express.static('public'));
 app.use(express.static('pictures'));
 
@@ -101,7 +113,7 @@ const server = app.listen(port, (error) => {
         console.log("Error starting the server");
     }
     console.log("This server is running on port", server.address().port);
- 
+
     videosRoute.readFromFile();
 
 });

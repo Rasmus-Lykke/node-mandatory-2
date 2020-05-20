@@ -1,5 +1,5 @@
-module.exports = { 
-    database: 'my_db',
-    user:     'user',
-    password: 'password'
+module.exports = {
+    database: 'car_zone_db  ',
+    user: 'root',
+    password: 'K5jc7S00D'
 };
