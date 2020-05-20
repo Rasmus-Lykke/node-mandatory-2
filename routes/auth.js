@@ -2,6 +2,10 @@ const router = require('express').Router();
 
 const User = require("../models/User.js");
 
+const jwt = require('jsonwebtoken');
+// You need to copy the config.template.json file and fill out your own secret
+let config = require('../config/config.json');
+
 const bcrypt = require('bcrypt');
 const saltRounds = 12;
 
@@ -29,9 +33,13 @@ router.post('/signin', (req, res) => {
                 } else {
                     bcrypt.compare(password, foundUser[0].password).then(result => {
                         if (result == true) {
-                            return res.send({
-                                response: "Login successful"
+                            const accessToken = jwt.sign({username: foundUser[0].username}, config.sessionSecret);
+                            return res.json({
+                                success: true,
+                                message: 'Authentication successful!',
+                                token: accessToken
                             });
+
                         } else {
                             return res.send({
                                 response: "The password did not match"
@@ -39,8 +47,8 @@ router.post('/signin', (req, res) => {
                         }
                     });
                 }
-
             });
+            
         } catch (error) {
             return res.send({
                 response: "Something went wrong with the DB"

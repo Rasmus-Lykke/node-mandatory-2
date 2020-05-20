@@ -8,5 +8,13 @@ router.get('/users', async (req, res) => {
     return res.send({ response: allUsers });
 });
 
+router.get('/setsessionvalue', (req, res) => {
+    req.session.payingAttention = true;
+    return res.send({ response: "OK" });
+});
+
+router.get('/getsessionvalue', (req, res) => {
+    return res.send({ response: req.session.payingAttention });
+});
 
 module.exports = router;

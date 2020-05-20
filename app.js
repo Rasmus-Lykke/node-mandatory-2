@@ -5,26 +5,20 @@ const app = express();
 
 const session = require('express-session');
 
+const jwt = require('jsonwebtoken');
+
 // parse application/json
 app.use(express.json());
 
 // You need to copy the config.template.json file and fill out your own secret
 const config = require('./config/config.json');
 
-/*
 // Middleware, sits between the request and the response
-app.use((req, res, next) => {
-    console.log("Time of the request: ", new Date());
-    next();
-});
-*/
-
 app.use(session({
     secret: config.sessionSecret,
     resave: false,
     saveUninitialized: true
 }));
-
 
 // Setup rateLimit
 const rateLimit = require('express-rate-limit');
@@ -83,13 +77,37 @@ const uploadPage = fs.readFileSync("./public/upload/upload.html", "utf8");
 const signinPage = fs.readFileSync("./public/signin/signin.html", "utf8");
 const signupPage = fs.readFileSync("./public/signup/signup.html", "utf8");
 
+let checkToken = (req, res, next) => {
+    let token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
 
-app.get("/", (req, res) => {
+    if (token) {
+        jwt.verify(token, config.sessionSecret, (err, decoded) => {
+            if (err) {
+                return res.json({
+                    success: false,
+                    message: 'Token is not valid'
+                });
+            } else {
+                req.decoded = decoded;
+                console.log("Success!")
+                next();
+            }
+        });
+
+    } else {
+        return res.json({
+            success: false,
+            message: 'Auth token is not supplied'
+        });
+    }
+};
+
+app.get("/", checkToken, (req, res) => {
     videosRoute.readFromFile();
     return res.send(navbarPage + frontpagePage + footerPage);
 });
 
-app.get("/player/:videoId", (req, res) => {
+app.get("/player/:videoId", checkToken, (req, res) => {
     return res.send(navbarPage + playerPage + footerPage);
 });
 
@@ -105,10 +123,10 @@ app.get("/signup", (req, res) => {
     return res.send(navbarPage + signupPage + footerPage);
 });
 
-
 const port = process.env.PORT ? process.env.PORT : 3000;
 
 const server = app.listen(port, (error) => {
+
     if (error) {
         console.log("Error starting the server");
     }
