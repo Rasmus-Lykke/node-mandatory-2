@@ -34,13 +34,11 @@ router.post('/signin', (req, res) => {
                     bcrypt.compare(password, foundUser[0].password).then(result => {
                         if (result == true) {
                             const accessToken = jwt.sign({username: foundUser[0].username}, config.sessionSecret);
-                            console.log(accessToken);
                             res.json({
-                                success: true,
-                                message: 'Authentication successful!',
+                                type: true,
+                                data: foundUser[0].username,
                                 token: accessToken
                             });
-                            return 
 
                         } else {
                             return res.send({

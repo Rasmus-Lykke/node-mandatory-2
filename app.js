@@ -67,6 +67,12 @@ const videosRoute = require("./routes/pictures");
 app.use(videosRoute.router);
 app.use(authRoute);
 app.use(usersRoute);
+app.use((req, res, next) =>  {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+    next();
+})
 
 
 const navbarPage = fs.readFileSync("./public/navbar/navbar.html", "utf8");
@@ -78,11 +84,19 @@ const uploadPage = fs.readFileSync("./public/upload/upload.html", "utf8");
 const signinPage = fs.readFileSync("./public/signin/signin.html", "utf8");
 const signupPage = fs.readFileSync("./public/signup/signup.html", "utf8");
 
+// Check the token included in the request header for 
+const checkToken = (req, res, next) => {
+    var token = req.headers['x-access-token'] || req.headers['authorization'] || req.query.authorization; // Express headers are auto converted to lowercase
 
-let checkToken = (req, res, next) => {
-    let token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
+    console.log(req.headers)
 
     if (token) {
+        
+        if (token.startsWith('Bearer ')) {
+            // Remove Bearer from string
+            token = token.slice(7, token.length);
+        }
+
         jwt.verify(token, config.sessionSecret, (err, decoded) => {
             if (err) {
                 return res.json({
@@ -104,7 +118,7 @@ let checkToken = (req, res, next) => {
     }
 };
 
-app.get("/", (req, res) => {
+app.get("/", checkToken, (req, res) => {
     videosRoute.readFromFile();
     return res.send(navbarPage + frontpagePage + footerPage);
 });
@@ -126,8 +140,9 @@ app.get("/signup", (req, res) => {
 });
 
 // For testing purposes 
-app.get("/secrettokenpage", checkToken, (req, res) => {
-    return res.send(navbarPage + footerPage)
+app.get("/test", checkToken, (req, res) => {
+    console.log(req.query.id);
+    return res.send({response: "Success"})
 })
 
 const port = process.env.PORT ? process.env.PORT : 3000;
