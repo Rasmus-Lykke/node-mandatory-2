@@ -67,13 +67,6 @@ const videosRoute = require("./routes/pictures");
 app.use(videosRoute.router);
 app.use(authRoute);
 app.use(usersRoute);
-app.use((req, res, next) =>  {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
-    next();
-})
-
 
 const navbarPage = fs.readFileSync("./public/navbar/navbar.html", "utf8");
 const footerPage = fs.readFileSync("./public/footer/footer.html", "utf8");
