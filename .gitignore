@@ -1,6 +1,7 @@
 
 mysqlCredentials.js
 config.json
+email.json
 
 # Logs
 logs

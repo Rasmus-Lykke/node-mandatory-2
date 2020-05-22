@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const bodyParser = require('body-parser')
 
 const app = express();
 
@@ -8,7 +9,7 @@ const session = require('express-session');
 const jwt = require('jsonwebtoken');
 
 // parse application/json
-app.use(express.json());
+app.use(bodyParser.json());
 
 // You need to copy the config.template.json file and fill out your own secret
 const config = require('./config/config.json');
@@ -50,7 +51,7 @@ const knex = Knex(knexfile.development);
 Model.knex(knex);
 
 // parse application/x-www-form-urlencoded
-app.use(express.urlencoded({
+app.use(bodyParser.urlencoded({
     extended: false
 }));
 
@@ -77,6 +78,7 @@ const uploadPage = fs.readFileSync("./public/upload/upload.html", "utf8");
 const signinPage = fs.readFileSync("./public/signin/signin.html", "utf8");
 const signupPage = fs.readFileSync("./public/signup/signup.html", "utf8");
 
+
 let checkToken = (req, res, next) => {
     let token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
 
@@ -102,12 +104,12 @@ let checkToken = (req, res, next) => {
     }
 };
 
-app.get("/", checkToken, (req, res) => {
+app.get("/", (req, res) => {
     videosRoute.readFromFile();
     return res.send(navbarPage + frontpagePage + footerPage);
 });
 
-app.get("/player/:videoId", checkToken, (req, res) => {
+app.get("/player/:videoId", (req, res) => {
     return res.send(navbarPage + playerPage + footerPage);
 });
 
@@ -123,8 +125,12 @@ app.get("/signup", (req, res) => {
     return res.send(navbarPage + signupPage + footerPage);
 });
 
-const port = process.env.PORT ? process.env.PORT : 3000;
+// For testing purposes 
+app.get("/secrettokenpage", checkToken, (req, res) => {
+    return res.send(navbarPage + footerPage)
+})
 
+const port = process.env.PORT ? process.env.PORT : 3000;
 const server = app.listen(port, (error) => {
 
     if (error) {
