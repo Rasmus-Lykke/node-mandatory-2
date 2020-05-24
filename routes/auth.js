@@ -14,7 +14,10 @@ const saltRounds = 12;
 
 router.post('/signin', (req, res) => {
 
+    console.log(req.headers)
+
     console.log("Login started");
+    console.log(req.body.email);
 
     const {
         email,
@@ -36,7 +39,9 @@ router.post('/signin', (req, res) => {
                         if (result == true) {
                             // Creating the access token and returning it to the client, who is supposed to use when accessing locked pages.
                             // This access token should be sent from the client to the server in the req.header. 
+        
                             const accessToken = jwt.sign({username: foundUser[0].username}, config.sessionSecret);
+                            // document.cookie = "auth="+accessToken;
                             res.json({
                                 type: true,
                                 data: foundUser[0].username,

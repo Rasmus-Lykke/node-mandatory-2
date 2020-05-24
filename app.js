@@ -1,14 +1,22 @@
 const express = require("express");
-const fs = require("fs");
-
 const app = express();
+
+// parse application/json
+app.use(express.json());
+
+var bodyParser = require('body-parser')
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
+const fs = require("fs");
 
 const session = require('express-session');
 
 const jwt = require('jsonwebtoken');
 
-// parse application/json
-app.use(express.json());
 
 // You need to copy the config.template.json file and fill out your own secret
 const config = require('./config/config.json');
@@ -19,6 +27,8 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+
+
 
 // Setup rateLimit
 const rateLimit = require('express-rate-limit');
@@ -39,9 +49,7 @@ app.use('/signup', authLimiter);
 app.use('/signin', authLimiter);
 
 /* Setup Knex with Objection */
-const {
-    Model
-} = require('objection');
+const { Model } = require('objection');
 const Knex = require('knex');
 const knexfile = require('./knexfile.js');
 
@@ -111,6 +119,7 @@ const checkToken = (req, res, next) => {
 };
 
 app.get("/", (req, res) => {
+    // console.log(req.headers)
     videosRoute.readFromFile();
     return res.send(navbarPage + frontpagePage + footerPage);
 });
