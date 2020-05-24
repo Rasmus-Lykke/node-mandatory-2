@@ -1,6 +1,5 @@
 const express = require("express");
 const fs = require("fs");
-const bodyParser = require('body-parser')
 
 const app = express();
 
@@ -9,7 +8,7 @@ const session = require('express-session');
 const jwt = require('jsonwebtoken');
 
 // parse application/json
-app.use(bodyParser.json());
+app.use(express.json());
 
 // You need to copy the config.template.json file and fill out your own secret
 const config = require('./config/config.json');
@@ -50,11 +49,6 @@ const knex = Knex(knexfile.development);
 
 Model.knex(knex);
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-
 app.use(express.static('public'));
 app.use(express.static('pictures'));
 
@@ -68,6 +62,8 @@ app.use(videosRoute.router);
 app.use(authRoute);
 app.use(usersRoute);
 
+// Reads the HTML files into variables so its possible to combine them as you want.
+// This way you do not need to have duplication HTML code.
 const navbarPage = fs.readFileSync("./public/navbar/navbar.html", "utf8");
 const footerPage = fs.readFileSync("./public/footer/footer.html", "utf8");
 
@@ -77,19 +73,22 @@ const uploadPage = fs.readFileSync("./public/upload/upload.html", "utf8");
 const signinPage = fs.readFileSync("./public/signin/signin.html", "utf8");
 const signupPage = fs.readFileSync("./public/signup/signup.html", "utf8");
 
-// Check the token included in the request header for 
+// Check the token included in the request header for authorization of access to the pages. 
 const checkToken = (req, res, next) => {
+
     var token = req.headers['x-access-token'] || req.headers['authorization'] || req.query.authorization; // Express headers are auto converted to lowercase
 
     console.log(req.headers)
 
     if (token) {
         
+        // Some tokens have the convention of starting with the symbols "Bearer " which we are slicing. 
         if (token.startsWith('Bearer ')) {
             // Remove Bearer from string
             token = token.slice(7, token.length);
         }
 
+        // Verifying the token with the "sessionsecret" saved in the config.json file.
         jwt.verify(token, config.sessionSecret, (err, decoded) => {
             if (err) {
                 return res.json({
@@ -111,7 +110,7 @@ const checkToken = (req, res, next) => {
     }
 };
 
-app.get("/", checkToken, (req, res) => {
+app.get("/", (req, res) => {
     videosRoute.readFromFile();
     return res.send(navbarPage + frontpagePage + footerPage);
 });
@@ -132,12 +131,14 @@ app.get("/signup", (req, res) => {
     return res.send(navbarPage + signupPage + footerPage);
 });
 
-// For testing purposes 
+// For testing purposes, require an access token in the header to access
 app.get("/test", checkToken, (req, res) => {
     console.log(req.query.id);
     return res.send({response: "Success"})
 })
 
+
+// Setting up the server with port number
 const port = process.env.PORT ? process.env.PORT : 3000;
 const server = app.listen(port, (error) => {
 

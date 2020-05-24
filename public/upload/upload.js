@@ -1,5 +1,6 @@
 let fileValid = false;
 
+// Validating the users input for the upload of the pictures.
 function validateForm() {
 
     const title = document.forms.pictureuploadform.title.value.trim();
@@ -29,6 +30,7 @@ function validateForm() {
     return fileValid;
 };
 
+// Validating the upload file for the upload of the pictures.
 function handleFileUpload(files) {
     const file = files[0];
 

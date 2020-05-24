@@ -1,8 +1,8 @@
 const url = window.location.href;
 let pictureId = url.substr(url.lastIndexOf("/") + 1);
 
-console.log(pictureId);
-
+// Appends a image tag with the image to the id "Player" in the player.html file and adds title,
+// and description to the corresponding paragraph fields
 $.get(`/pictures/${pictureId}`)
     .done((data) => {
         

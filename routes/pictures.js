@@ -27,7 +27,8 @@ const upload = multer({
     storage: storage
 });
 
-
+// The picture information are for now saved in a json file called myjsonfile.json.
+// It is intended to convert this to a database in the near future. This would also make it easier with implementing comments. 
 function writeToFile() {
     var json = JSON.stringify(obj);
     fs.writeFile('myjsonfile.json', json, 'utf8', (err, data) => {
@@ -57,6 +58,7 @@ router.get("/pictures/:pictureId", (req, res) => {
     });
 });
 
+
 router.post("/pictures", upload.single('uploadedpicture'), (req, res) => {
     const picture = {
         title: req.body.title.trim(),
@@ -70,6 +72,7 @@ router.post("/pictures", upload.single('uploadedpicture'), (req, res) => {
         //tags: req.body.tags.replace(","," ").split(" ")
     };
 
+    // Server validation of the uploaded image in information typed by the user. 
     const titleMaxLength = 128;
     if (picture.title.length === 0 || picture.title.length > titleMaxLength) {
         return res.status(400).send({
@@ -100,7 +103,7 @@ router.post("/pictures", upload.single('uploadedpicture'), (req, res) => {
         })
     };
 
-    console.log(picture);
+
     obj.pictures.push(picture);
     writeToFile();
 
@@ -119,5 +122,4 @@ module.exports = {
             };
         });
     }
-
 };

@@ -1,3 +1,4 @@
+// A ajax function which sorts the picture title and filename in each their corresponding HTML list based on their category
 $.get("pictures?page=1", (data) => {
     data.response.map((picture) => {
         if (picture.category == "car") {
@@ -21,6 +22,5 @@ $.get("pictures?page=1", (data) => {
                 <a href="player/${picture.fileName}" >${picture.title} </a>
             </li>`)
         }
-
     });
 });

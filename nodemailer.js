@@ -2,25 +2,25 @@
 const nodemailer = require("nodemailer");
 const config = require('./config/email.json');
 
-// async..await is not allowed in global scope, must use a wrapper
+// Async..await is not allowed in global scope, must use a wrapper
 async function main() {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
   //let testAccount = await nodemailer.createTestAccount();
 
-  // create reusable transporter object using the default SMTP transport
+  // create reusable transporter object
   let transporter = nodemailer.createTransport( {
-    service: "Gmail",  // true for 465, false for other ports
+    service: "Gmail",  // Tell nodemailer which server you are using
     auth: {
-      user: config.email, // generated ethereal user
-      pass: config.password // generated ethereal password
+      user: config.email, // Input you email in the config/email.json file
+      pass: config.password // Input you email accounts password in the config/email.json file
     }
   });
 
-  // send mail with defined transport object
+  // Send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Admin" <rlykke1@gmail.com>', // sender address
-    to: "rasmusls98@gmail.com, kkr@vemonto.com", // list of receivers
+    from: '"YOUR NAME" <YOUR EMAIl>', // sender address
+    to: "recipient1@email.com, recipient2@email.com", // list of recipients
     subject: "Hello ✔", // Subject line
     text: "Hello world?", // plain text body
   });

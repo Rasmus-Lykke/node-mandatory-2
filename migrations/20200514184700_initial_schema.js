@@ -1,7 +1,9 @@
 exports.up = function (knex) {
+    // Using knex to create a table called users which includes the columns 
+    // id, username, password, email, updated at and created at.
     return knex.schema
         .createTable('users', table => {
-            table.increments('id');
+            table.increments('id'); // Auto increments
             table.string('username').unique().notNullable();
             table.string('password').notNullable();
             table.string('email').notNullable().unique();
